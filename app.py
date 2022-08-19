@@ -3,14 +3,13 @@ from starlette.middleware.cors import CORSMiddleware
 
 from core.configuration import settings
 
-
 # Initialize FastAPI application
 app = FastAPI(
     title=settings.PROJECT_NAME,
     openapi_url=f'{settings.API_STR}/openapi.json'
 )
 
-# CORS setup
+# Middleware setup
 if settings.CORS_ORIGINS:
     app.add_middleware(
         CORSMiddleware,
