@@ -16,6 +16,14 @@ logger = logging.getLogger(__name__)
 def create_new_recipe(recipe: RecipeCreate, db: Session) -> RecipeSchema:
     ingredient_list = []
 
+    recipe_exists = db.query(Recipe).filter(Recipe.name == recipe.name).first()
+
+    if recipe_exists:
+        logger.error(f'Error during recipe creation with name: {recipe.name}')
+        raise RecipeServerException(
+            status_code=400, message='Recipe already exists'
+        )
+
     for ingredient_name in recipe.ingredients:
         ingredient = db.query(Ingredient).filter(
             Ingredient.name == ingredient_name
