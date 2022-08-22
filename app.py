@@ -1,3 +1,5 @@
+from logging.config import dictConfig
+
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteException
@@ -9,6 +11,10 @@ from core.exceptions import (
     RecipeServerException, generic_error_handler,
     recipe_server_exception_handler
 )
+from core.logger import LOG_CONFIG
+
+# Setup logging configuration
+dictConfig(LOG_CONFIG)
 
 # Initialize FastAPI application
 app = FastAPI(

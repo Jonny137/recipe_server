@@ -1,3 +1,4 @@
+import logging
 from typing import List
 from sqlalchemy.orm import Session
 
@@ -7,6 +8,9 @@ from models.ingredient import Ingredient
 from core.exceptions import RecipeServerException
 from schemas.recipe import Recipe as RecipeSchema
 from services.ingredient import create_new_ingredient
+
+
+logger = logging.getLogger(__name__)
 
 
 def create_new_recipe(recipe: RecipeCreate, db: Session) -> RecipeSchema:
@@ -31,6 +35,7 @@ def create_new_recipe(recipe: RecipeCreate, db: Session) -> RecipeSchema:
     db.add(new_recipe)
     db.commit()
 
+    logger.info(f'Successfully added new recipe with name: {recipe.name}')
     return new_recipe
 
 
@@ -42,6 +47,7 @@ def get_recipe_by_name(name: str, db: Session) -> RecipeSchema:
     recipe = db.query(Recipe).filter(Recipe.name == name).first()
 
     if not recipe:
+        logger.error(f'Error during fetching recipe with name: {name}')
         raise RecipeServerException(
             status_code=404,
             message='Recipe with specified name does not exist.'

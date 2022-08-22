@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from sqlalchemy import func
@@ -9,6 +10,9 @@ from core.exceptions import RecipeServerException
 from schemas.ingredient import Ingredient as IngredientSchema
 
 
+logger = logging.getLogger(__name__)
+
+
 def create_new_ingredient(
         ingredient_name: str, db: Session
 ) -> IngredientSchema:
@@ -18,8 +22,12 @@ def create_new_ingredient(
         db.add(new_ingredient)
         db.commit()
 
+        logger.info(
+            f'Successfully added new ingredient with name: {ingredient_name}'
+        )
         return new_ingredient
     except IntegrityError:
+        logger.error(f'Error ingredient creation with name: {ingredient_name}')
         raise RecipeServerException(
             status_code=400, message='Duplicated entry.'
         )
