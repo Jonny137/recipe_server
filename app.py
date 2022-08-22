@@ -3,6 +3,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from core.configuration import settings
 from routers.recipe import recipe_router
+from routers.ingredient import ingredient_router
 
 # Initialize FastAPI application
 app = FastAPI(
@@ -23,3 +24,4 @@ if settings.CORS_ORIGINS:
 
 # Attach API routers
 app.include_router(recipe_router, prefix=settings.API_STR + '/recipes')
+app.include_router(ingredient_router, prefix=settings.API_STR + '/ingredients')
