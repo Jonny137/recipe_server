@@ -2,6 +2,7 @@ from logging.config import dictConfig
 
 from fastapi import FastAPI
 from starlette.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.exceptions import HTTPException as StarletteException
 
 from core.configuration import settings
@@ -12,6 +13,7 @@ from core.exceptions import (
     recipe_server_exception_handler
 )
 from core.logger import LOG_CONFIG
+from middlewares.log import RequestLogMiddleware
 
 # Setup logging configuration
 dictConfig(LOG_CONFIG)
@@ -23,6 +25,8 @@ app = FastAPI(
 )
 
 # Middleware setup
+request_logger_middleware = RequestLogMiddleware()
+
 if settings.CORS_ORIGINS:
     app.add_middleware(
         CORSMiddleware,
@@ -31,6 +35,7 @@ if settings.CORS_ORIGINS:
         allow_methods=['*'],
         allow_headers=['*'],
     )
+app.add_middleware(BaseHTTPMiddleware, dispatch=request_logger_middleware)
 
 
 # Attach API routers
