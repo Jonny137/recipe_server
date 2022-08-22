@@ -22,4 +22,4 @@ if settings.CORS_ORIGINS:
 
 
 # Attach API routers
-app.include_router(recipe_router, prefix=settings.API_STR)
+app.include_router(recipe_router, prefix=settings.API_STR + '/recipes')

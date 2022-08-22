@@ -20,3 +20,8 @@ class Recipe(Base):
         'Ingredient', secondary='recipe_ingredient',
         back_populates='recipes', cascade='all, delete'
     )
+
+    def __init__(self, name, preparation, ingredients):
+        self.name = name,
+        self.preparation = preparation,
+        self.ingredients = ingredients

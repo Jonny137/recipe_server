@@ -19,3 +19,6 @@ class Ingredient(Base):
         'Recipe', secondary='recipe_ingredient',
         back_populates='ingredients', cascade='all, delete'
     )
+
+    def __init__(self, name):
+        self.name = name
