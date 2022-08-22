@@ -1,21 +1,28 @@
+import os
+from pathlib import Path
 from typing import List, Union
 
+from dotenv import load_dotenv
 from pydantic import AnyHttpUrl, BaseSettings
+
+
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
 
 
 class Settings(BaseSettings):
     API_STR: str = '/api'
-    PROJECT_NAME: str = 'recipe_server'
-    SECRET_KEY: str = 'hackmeshepard'
-    HOST: Union[str, None] = '0.0.0.0'
-    PORT: Union[int, None] = 8080
+    PROJECT_NAME: str = os.getenv('PROJECT_NAME')
+    SECRET_KEY: str = os.getenv('SECRET_KEY')
+    HOST: Union[str, None] = os.getenv('HOST') or '0.0.0.0'
+    PORT: Union[int, None] = os.getenv('PORT') or 8080
     CORS_ORIGINS: List[AnyHttpUrl] = [
-        'http://localhost:3000'
+        os.getenv('LOCAL_ORIGIN')
     ]
 
-    POSTGRES_USER: str = 'shepard'
-    POSTGRES_PASSWORD = 'sheep123'
-    POSTGRES_SERVER: str = 'localhost'
+    POSTGRES_USER: str = os.getenv('POSTGRES_USER')
+    POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+    POSTGRES_SERVER: str = os.getenv('POSTGRES_SERVER', 'localhost')
     POSTGRES_PORT: str = '5432'
     POSTGRES_DB: str = 'recipe_server'
     SQLALCHEMY_DATABASE_URL = (
