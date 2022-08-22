@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List
 
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
@@ -14,4 +14,3 @@ def most_used_ingredients(db: Session = Depends(get_db)) -> Any:
     most_used_ings = get_most_used_ingredients(db)
 
     return most_used_ings
-

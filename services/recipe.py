@@ -1,9 +1,10 @@
-from typing import List, Optional
+from typing import List
 from sqlalchemy.orm import Session
 
 from models.recipe import Recipe
 from schemas.recipe import RecipeCreate
 from models.ingredient import Ingredient
+from core.exceptions import RecipeServerException
 from schemas.recipe import Recipe as RecipeSchema
 from services.ingredient import create_new_ingredient
 
@@ -37,5 +38,13 @@ def get_all_recipes(db: Session) -> List[RecipeSchema]:
     return db.query(Recipe).all()
 
 
-def get_recipe_by_name(name: str, db: Session) -> Optional[RecipeSchema]:
-    return db.query(Recipe).filter(Recipe.name == name).first()
+def get_recipe_by_name(name: str, db: Session) -> RecipeSchema:
+    recipe = db.query(Recipe).filter(Recipe.name == name).first()
+
+    if not recipe:
+        raise RecipeServerException(
+            status_code=404,
+            message='Recipe with specified name does not exist.'
+        )
+
+    return recipe

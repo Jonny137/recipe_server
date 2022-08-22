@@ -1,4 +1,4 @@
-from typing import Any, List, Union
+from typing import Any, List
 
 from sqlalchemy.orm import Session
 from fastapi import APIRouter, Depends
@@ -29,10 +29,8 @@ def all_recipes(db: Session = Depends(get_db)) -> Any:
     return recipes
 
 
-@recipe_router.get('/', response_model=Union[Recipe | str])
+@recipe_router.get('/', response_model=Recipe)
 def recipe_by_name(name: str, db: Session = Depends(get_db)) -> Any:
     recipe = get_recipe_by_name(name, db)
 
-    if not recipe:
-        return f'No recipe with name: {name}'
     return recipe
