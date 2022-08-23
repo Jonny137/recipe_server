@@ -22,6 +22,13 @@ def test_get_all_recipe(client, init_recipe):
     assert len(response.json()) == 2
 
 
+def test_get_all_recipe_no_result(client):
+    response = client.get(f'{RECIPE_ENDPOINT}/all')
+
+    assert response.status_code == 200
+    assert len(response.json()) == 0
+
+
 def test_get_recipe_by_name(client, init_recipe):
     recipe_1, _ = init_recipe
     response = client.get(f'{RECIPE_ENDPOINT}/?name=existing_recipe_1')

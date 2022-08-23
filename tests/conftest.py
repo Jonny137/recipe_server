@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine
 from fastapi.testclient import TestClient
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy_utils import database_exists, create_database, drop_database
 
 from app import app
 from db.base_class import Base
@@ -13,7 +13,7 @@ from schemas.recipe import RecipeCreate
 from services.recipe import create_new_recipe
 
 
-@pytest.fixture(scope='session', autouse=True)
+@pytest.fixture(scope='module', autouse=True)
 def db_engine():
     engine = create_engine(settings.TEST_DATABASE_URL)
     if not database_exists(engine.url):
@@ -21,6 +21,7 @@ def db_engine():
 
     Base.metadata.create_all(bind=engine)
     yield engine
+    drop_database(engine.url)
 
 
 @pytest.fixture(scope='function')
